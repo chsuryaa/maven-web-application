@@ -1,37 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-                             http://maven.apache.org/maven-v4_0_0.xsd">
+                             https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
   <modelVersion>4.0.0</modelVersion>
+
   <groupId>com.example</groupId>
   <artifactId>web-application</artifactId>
   <version>1.0.0</version>
   <packaging>war</packaging>
 
-  <name>Sample Web Application (multi-java)</name>
+  <name>Web Application</name>
+  <description>Sample Maven Web Application compatible with Java 8–21, Tomcat, Jenkins, and Nexus</description>
 
   <properties>
-    <!-- default to a conservative target for broad compatibility -->
+    <!-- Set compiler target -->
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <failOnMissingWebXml>false</failOnMissingWebXml>
   </properties>
 
+  <!-- Profiles for different Java versions -->
   <profiles>
-    <!-- Profile for Java 11/17 builds. Activate with -Pjava11 or -Pjava17 -->
+    <profile>
+      <id>java8</id>
+      <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+      </properties>
+    </profile>
     <profile>
       <id>java11</id>
-      <activation/>
       <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
       </properties>
     </profile>
-
     <profile>
       <id>java17</id>
-      <activation/>
       <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
@@ -39,20 +47,48 @@
     </profile>
   </profiles>
 
-  <build>
-    <finalName>web-application</finalName>
-    <plugins>
-      <!-- WAR plugin -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-war-plugin</artifactId>
-        <version>3.4.0</version>
-        <configuration>
-          <failOnMissingWebXml>false</failOnMissingWebXml>
-        </configuration>
-      </plugin>
+  <dependencies>
+    <!-- Servlet API (provided by Tomcat) -->
+    <dependency>
+      <groupId>jakarta.servlet</groupId>
+      <artifactId>jakarta.servlet-api</artifactId>
+      <version>5.0.0</version>
+      <scope>provided</scope>
+    </dependency>
 
-      <!-- Compiler plugin -->
+    <!-- JSTL (for JSP pages) -->
+    <dependency>
+      <groupId>jakarta.servlet.jsp.jstl</groupId>
+      <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+      <version>2.0.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.glassfish.web</groupId>
+      <artifactId>jakarta.servlet.jsp.jstl</artifactId>
+      <version>2.0.0</version>
+    </dependency>
+
+    <!-- JUnit for basic testing -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <version>5.9.2</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <version>5.9.2</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <finalName>${project.artifactId}</finalName>
+    <plugins>
+      <!-- Compiler Plugin -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -63,39 +99,47 @@
         </configuration>
       </plugin>
 
-      <!-- Deploy plugin used by 'mvn deploy' to push to Nexus -->
+      <!-- WAR Plugin (fixed version) -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-deploy-plugin</artifactId>
-        <version>3.1.1</version>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>3.4.0</version>
+        <configuration>
+          <failOnMissingWebXml>false</failOnMissingWebXml>
+        </configuration>
+      </plugin>
+
+      <!-- Surefire for JUnit 5 -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.2.5</version>
+      </plugin>
+
+      <!-- Deploy to Tomcat -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>tomcat7-maven-plugin</artifactId>
+        <version>2.2</version>
+        <configuration>
+          <url>http://your-tomcat-server:8080/manager/text</url>
+          <server>tomcat</server>
+          <path>/web-application</path>
+        </configuration>
       </plugin>
     </plugins>
   </build>
 
+  <!-- Optional: Nexus repository -->
   <distributionManagement>
     <repository>
-      <id>nexus-releases</id>
-      <url>http://<NEXUS_HOST>:8081/repository/maven-releases/</url>
+      <id>nexus-release</id>
+      <url>http://your-nexus-server:8081/repository/maven-releases/</url>
     </repository>
     <snapshotRepository>
-      <id>nexus-snapshots</id>
-      <url>http://<NEXUS_HOST>:8081/repository/maven-snapshots/</url>
+      <id>nexus-snapshot</id>
+      <url>http://your-nexus-server:8081/repository/maven-snapshots/</url>
     </snapshotRepository>
   </distributionManagement>
-
-  <dependencies>
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
-      <version>4.0.1</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.13.2</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
 
 </project>
