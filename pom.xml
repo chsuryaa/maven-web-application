@@ -12,7 +12,7 @@
   <packaging>war</packaging>
 
   <name>Web Application</name>
-  <description>Sample Maven WebApp — fixed WAR plugin for Java 8–17, Jenkins, Tomcat, Nexus</description>
+  <description>Maven WebApp — fixed WAR plugin for Java 8–17, Jenkins, Tomcat, Nexus</description>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -83,7 +83,7 @@
         </configuration>
       </plugin>
 
-      <!-- WAR Plugin fixed -->
+      <!-- WAR Plugin (fixed) -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
@@ -100,7 +100,7 @@
         <version>3.2.5</version>
       </plugin>
 
-      <!-- Tomcat deploy plugin (Jenkins “Deploy to container”) -->
+      <!-- Tomcat deploy plugin -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>tomcat7-maven-plugin</artifactId>
