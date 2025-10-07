@@ -12,17 +12,16 @@
   <packaging>war</packaging>
 
   <name>Web Application</name>
-  <description>Sample Maven Web Application compatible with Java 8–21, Tomcat, Jenkins, and Nexus</description>
+  <description>Sample Maven WebApp — fixed WAR plugin for Java 8–17, Jenkins, Tomcat, Nexus</description>
 
   <properties>
-    <!-- Set compiler target -->
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <failOnMissingWebXml>false</failOnMissingWebXml>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
   </properties>
 
-  <!-- Profiles for different Java versions -->
+  <!-- Java version profiles -->
   <profiles>
     <profile>
       <id>java8</id>
@@ -48,7 +47,6 @@
   </profiles>
 
   <dependencies>
-    <!-- Servlet API (provided by Tomcat) -->
     <dependency>
       <groupId>jakarta.servlet</groupId>
       <artifactId>jakarta.servlet-api</artifactId>
@@ -56,27 +54,12 @@
       <scope>provided</scope>
     </dependency>
 
-    <!-- JSTL (for JSP pages) -->
-    <dependency>
-      <groupId>jakarta.servlet.jsp.jstl</groupId>
-      <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
-      <version>2.0.0</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.glassfish.web</groupId>
-      <artifactId>jakarta.servlet.jsp.jstl</artifactId>
-      <version>2.0.0</version>
-    </dependency>
-
-    <!-- JUnit for basic testing -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
       <version>5.9.2</version>
       <scope>test</scope>
     </dependency>
-
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
@@ -88,6 +71,7 @@
   <build>
     <finalName>${project.artifactId}</finalName>
     <plugins>
+
       <!-- Compiler Plugin -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -99,7 +83,7 @@
         </configuration>
       </plugin>
 
-      <!-- WAR Plugin (fixed version) -->
+      <!-- WAR Plugin fixed -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
@@ -116,7 +100,7 @@
         <version>3.2.5</version>
       </plugin>
 
-      <!-- Deploy to Tomcat -->
+      <!-- Tomcat deploy plugin (Jenkins “Deploy to container”) -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>tomcat7-maven-plugin</artifactId>
@@ -127,10 +111,10 @@
           <path>/web-application</path>
         </configuration>
       </plugin>
+
     </plugins>
   </build>
 
-  <!-- Optional: Nexus repository -->
   <distributionManagement>
     <repository>
       <id>nexus-release</id>
